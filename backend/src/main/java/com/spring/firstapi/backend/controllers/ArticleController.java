@@ -3,9 +3,12 @@ package com.spring.firstapi.backend.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import com.spring.firstapi.backend.entities.Article;
 import com.spring.firstapi.backend.exceptions.ArticleExistsException;
 import com.spring.firstapi.backend.exceptions.ArticleNotFoundException;
+import com.spring.firstapi.backend.exceptions.TitleNotFoundException;
 import com.spring.firstapi.backend.services.ArticleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +55,7 @@ public class ArticleController {
 
     // add new article
     @PostMapping("/articles")
-    public ResponseEntity<Void> addArticle(@RequestBody Article article, UriComponentsBuilder builder) {
+    public ResponseEntity<Void> addArticle(@Valid @RequestBody Article article, UriComponentsBuilder builder) {
         try {
             articleService.addArticle(article);
             HttpHeaders headers = new HttpHeaders();
@@ -79,10 +82,15 @@ public class ArticleController {
         articleService.deleteArticleById(id);
     }
 
-    // get article by id
+    // get article by title
     @GetMapping("/articles/bytitle/{title}")
-    public Article getArticleById(@PathVariable("title") String title) {
-        return articleService.getArticleByTitle(title);
+    public Article getArticleByTitle(@PathVariable("title") String title) throws ArticleNotFoundException {
+        Article article = articleService.getArticleByTitle(title);
+        if (article == null) {
+            throw new ArticleNotFoundException("Title: '" + title + "' doesn't exist.");
+        } else {
+            return article;
+        }
     }
 
 }

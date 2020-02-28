@@ -74,7 +74,7 @@ public class ArticleService {
     }
 
     // get article by title
-    public Article getArticleByTitle(final String title) {
+    public Article getArticleByTitle(String title) {
         Article article = articleRepository.findByTitle(title);
         return article;
     }
