@@ -1,7 +1,9 @@
 package com.spring.firstapi.backend.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -10,8 +12,10 @@ import javax.validation.constraints.Size;
 // @Table(name = "article")
 public class Article {
 
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     @Id
-    @GeneratedValue
     private Long id;
     @NotEmpty(message = "Title is mondatory field. Please provide Title")
     @Size(min = 5, message = "Title should be at least 5 characters.")

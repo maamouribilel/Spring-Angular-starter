@@ -4,17 +4,20 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 import com.spring.firstapi.backend.entities.Article;
 import com.spring.firstapi.backend.exceptions.ArticleExistsException;
 import com.spring.firstapi.backend.exceptions.ArticleNotFoundException;
 import com.spring.firstapi.backend.exceptions.TitleNotFoundException;
+// import com.spring.firstapi.backend.exceptions.TitleNotFoundException;
 import com.spring.firstapi.backend.services.ArticleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
+@Validated
 public class ArticleController {
 
     @Autowired
@@ -44,7 +48,7 @@ public class ArticleController {
 
     // get article by id
     @GetMapping("/articles/{id}")
-    public Optional<Article> getArticleById(@PathVariable("id") Long id) {
+    public Optional<Article> getArticleById(@PathVariable("id") @Min(1) Long id) {
         try {
             return articleService.getArticleById(id);
         } catch (ArticleNotFoundException e) {
@@ -84,10 +88,10 @@ public class ArticleController {
 
     // get article by title
     @GetMapping("/articles/bytitle/{title}")
-    public Article getArticleByTitle(@PathVariable("title") String title) throws ArticleNotFoundException {
+    public Article getArticleByTitle(@PathVariable("title") String title) throws TitleNotFoundException {
         Article article = articleService.getArticleByTitle(title);
         if (article == null) {
-            throw new ArticleNotFoundException("Title: '" + title + "' doesn't exist.");
+            throw new TitleNotFoundException("Title: '" + title + "' doesn't exist.");
         } else {
             return article;
         }
