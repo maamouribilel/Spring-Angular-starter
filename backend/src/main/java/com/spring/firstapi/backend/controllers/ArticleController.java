@@ -23,31 +23,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @Validated
+@RequestMapping(value = "/articles")
 public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
 
     // get all articles
-    @GetMapping("/")
+    @GetMapping("/hello")
     public String helloWorld() {
         return "<h2>Hello World!</h2>";
     }
 
     // get all articles
-    @GetMapping("/articles")
+    @GetMapping
     public List<Article> getAllArticles() {
         return articleService.getAllArticles();
     }
 
     // get article by id
-    @GetMapping("/articles/{id}")
+    @GetMapping("/{id}")
     public Optional<Article> getArticleById(@PathVariable("id") @Min(1) Long id) {
         try {
             return articleService.getArticleById(id);
@@ -58,7 +60,7 @@ public class ArticleController {
     }
 
     // add new article
-    @PostMapping("/articles")
+    @PostMapping("/")
     public ResponseEntity<Void> addArticle(@Valid @RequestBody Article article, UriComponentsBuilder builder) {
         try {
             articleService.addArticle(article);
@@ -71,7 +73,7 @@ public class ArticleController {
     }
 
     // update an article
-    @PostMapping("/articles/{id}")
+    @PostMapping("/{id}")
     public Article updateArticleById(@PathVariable("id") Long id, @RequestBody Article article) {
         try {
             return articleService.updateArticleById(id, article);
@@ -81,13 +83,13 @@ public class ArticleController {
     }
 
     // delete an article
-    @DeleteMapping("/articles/{id}")
+    @DeleteMapping("/{id}")
     public void deleteArticleById(@PathVariable("id") Long id) throws ArticleNotFoundException {
         articleService.deleteArticleById(id);
     }
 
     // get article by title
-    @GetMapping("/articles/bytitle/{title}")
+    @GetMapping("/bytitle/{title}")
     public Article getArticleByTitle(@PathVariable("title") String title) throws TitleNotFoundException {
         Article article = articleService.getArticleByTitle(title);
         if (article == null) {

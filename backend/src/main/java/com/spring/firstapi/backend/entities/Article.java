@@ -1,15 +1,18 @@
 package com.spring.firstapi.backend.entities;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Entity
-// @Table(name = "article")
+
 public class Article {
 
 
@@ -21,6 +24,9 @@ public class Article {
     @Size(min = 5, message = "Title should be at least 5 characters.")
     private String title;
     private String description;
+
+    @OneToMany( mappedBy = "article" )
+    private List<Comment> comments;
 
     public Article(Long id, String title, String description) {
         this.id = id;
@@ -59,6 +65,14 @@ public class Article {
     @Override
     public String toString() {
         return "Article [description=" + description + ", id=" + id + ", title=" + title + "]";
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
 }
